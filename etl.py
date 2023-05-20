@@ -67,3 +67,30 @@ def load_to_s3():
 
     print("file loaded successfully to the s3 bucket")
 
+
+def read_transform_files_from_s3():
+    columns=['employer_website', 'job_id', 'job_employment_type', 'job_title','job_apply_link', 'job_description', 'job_city', 'job_country','job_posted_at_datetime_utc', 'employer_company_type']
+
+    objects_list = s3.list_objects(Bucket=bucket_name, Prefix=os.path)
+    file = objects_list.get('Contents')[1]
+    Key = file.get('Key')
+    obj = s3.get_object(Bucket = bucket_name, Key=Key)
+    data = pd.read_json(io.BytesIO(obj['Body'].read()))
+    data = data[columns]
+    data['job_posted_at_datetime_utc'] = data['job_posted_at_datetime_utc'].map(lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%fZ').date())
+    today = datetime.now().date()
+    start_of_week = today - timedelta(days=today.weekday())
+    data = data[data['job_posted_at_datetime_utc'] >= start_of_week]
+    
+
+    file_name = f"{datetime.now().strftime('%Y-%m-%d-%H-%M')}"
+    csv_buffer = StringIO()
+    data.reset_index(drop=True, inplace=True)
+    data.to_csv(csv_buffer,index=False)
+    csv_str = csv_buffer.getvalue()
+
+    s3.put_object(Bucket='', Key = f'{transformed_path_name}/{file_name}', Body=csv_str)
+
+    print("tranfomed file loaded successfully")
+    return file_name
+

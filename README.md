@@ -1,8 +1,8 @@
-Certainly! Here's a sample README file that you can use as a reference for your project:
+Certainly! Here's an updated README file based on the file structure you provided:
 
-# Job Search Data Extraction and Processing
+# Job Search Data Extraction, Transformation, and Loading (ETL)
 
-This project focuses on extracting job search data using the RapidAPI job search API, processing the extracted data, and loading it into an S3 bucket and Redshift database. The extracted data includes job posts for specific job titles and locations.
+This project focuses on extracting job search data using the RapidAPI job search API, performing data transformation, and loading it into an S3 bucket and Redshift database. The ETL process is divided into separate files: `etl.py` for extraction, transformation, and loading, and `util.py` for utility functions.
 
 ## Prerequisites
 
@@ -42,16 +42,16 @@ Additionally, you will need the following:
 
 4. Update the necessary configurations in the code:
 
-   - Modify the `url` variable in the code to match the RapidAPI job search API URL.
+   - Modify the `url` variable in `etl.py` to match the RapidAPI job search API URL.
    - Adjust other parameters such as query parameters, headers, and data processing as per your requirements.
 
-5. Run the main script:
+5. Run the ETL script:
 
    ```
-   python main.py
+   python etl.py
    ```
 
-   This will initiate the data extraction, processing, and loading into the S3 bucket and Redshift database.
+   This will initiate the data extraction, transformation, and loading into the S3 bucket and Redshift database.
 
 6. Review the console output for any errors or successful completion messages.
 
@@ -59,10 +59,11 @@ Additionally, you will need the following:
 
 The project structure is organized as follows:
 
-- `main.py`: The main script that orchestrates the data extraction, processing, and loading operations.
-- `README.md`: The project's README file providing an overview, setup instructions, and usage guidelines.
+- `etl.py`: The main script that performs the extraction, transformation, and loading operations.
+- `util.py`: Contains utility functions used by the ETL process.
 - `.env`: The environment file to store your RapidAPI API key.
 - `.gitignore`: Specifies files and directories to be ignored by Git.
+- `README.md`: The project's README file providing an overview, setup instructions, and usage guidelines.
 - `requirements.txt`: Lists the project dependencies.
 
 ## Contributing
@@ -75,4 +76,4 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 
 ---
 
-Feel free to customize the README file according to your project's specific requirements and include additional sections as needed.
+Feel free to customize the README file further to provide additional information or sections specific to your project's requirements.

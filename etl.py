@@ -94,3 +94,16 @@ def read_transform_files_from_s3():
     print("tranfomed file loaded successfully")
     return file_name
 
+def load_to_redshift(table_name):
+    s3_path = 's3://by-transformed-jobs-data/transformed_job_posts.csv'
+    iam_role = config.get('IAM_ROLE')
+    conn = get_redshift_connection()
+    copy_query = f"""
+    COPY {table_name}
+    FROM '{s3_path}'
+    IAM_ROLE '{iam_role}'
+    CSV
+    IGNOREHEADER 1;
+    """
+    execute_sql(copy_query, conn)
+    print('Data successfully loaded to Redshift')

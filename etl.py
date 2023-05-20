@@ -43,3 +43,27 @@ def extract_from_API_(url,countries,jobs):
             all_data = pd.concat([all_data, data])
 
     return all_data
+
+def load_to_s3():
+    countries = ['USA', 'UK', 'Canada']
+    jobs = ['Data engineer', 'Data Analyst']
+    url = url
+
+    data = extract_from_API_(url,countries,jobs)
+    
+    file_name = f"{datetime.now().strftime('%Y-%m-%d-%H-%M')}"
+    file_path = os.path.join(os.path, file_name)
+
+    # Save the JSON data to a local file
+    data.to_json(file_path, orient='records')
+
+    csv_buffer = StringIO()
+    data.reset_index(drop=True, inplace=True)
+    data.to_json(csv_buffer,orient='columns')
+    csv_str = csv_buffer.getvalue()
+
+
+    s3.put_object(Bucket=bucket_name, Key = f'{os.path}/{file_name}', Body=csv_str)
+
+    print("file loaded successfully to the s3 bucket")
+
